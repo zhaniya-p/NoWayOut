@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class PauseManager : MonoBehaviour
 {
@@ -8,7 +9,8 @@ public class PauseManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape)) TogglePause();
+        if (Keyboard.current.escapeKey.wasPressedThisFrame)
+            TogglePause();
     }
 
     public void TogglePause()

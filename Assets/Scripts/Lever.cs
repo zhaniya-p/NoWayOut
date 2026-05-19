@@ -1,20 +1,23 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Interactable : MonoBehaviour
+public class Lever : MonoBehaviour
 {
     private bool playerNearby = false;
-    private bool done = false;
+    private bool activated = false;
     public GameObject hintText;
+    public Material activatedMaterial;
+    public static int activatedCount = 0;
+    public static int totalLevers = 3;
 
     void Update()
     {
-        if (playerNearby && !done)
+        if (playerNearby && !activated)
         {
             if (hintText != null) hintText.SetActive(true);
 
             if (Keyboard.current.eKey.wasPressedThisFrame)
-                CompleteTask();
+                ActivateLever();
         }
         else
         {
@@ -22,20 +25,23 @@ public class Interactable : MonoBehaviour
         }
     }
 
-    private static int collectedCount = 0;
-
-    void CompleteTask()
+    void ActivateLever()
     {
-        done = true;
-        collectedCount++;
-        GameManager.Instance.UpdateTaskCount(collectedCount);
-        GameManager.Instance.TaskCompleted();
+        activated = true;
+        activatedCount++;
 
-        if (collectedCount >= 3)
-            collectedCount = 0;
+        if (activatedMaterial != null)
+            GetComponent<Renderer>().material = activatedMaterial;
 
         if (hintText != null) hintText.SetActive(false);
-        gameObject.SetActive(false);
+
+        GameManager.Instance.UpdateTaskCount(activatedCount);
+
+        if (activatedCount >= totalLevers)
+        {
+            activatedCount = 0;
+            TaskManager.Instance.TaskGroupCompleted();
+        }
     }
 
     void OnTriggerEnter(Collider other)

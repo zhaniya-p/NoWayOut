@@ -9,11 +9,13 @@ public class MouseLook : MonoBehaviour
 
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
+        xRotation = 0f;
     }
 
     void Update()
     {
+        if (Cursor.lockState == CursorLockMode.None) return;
+
         var mouse = Mouse.current;
         if (mouse == null) return;
 

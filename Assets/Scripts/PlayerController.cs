@@ -30,7 +30,6 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         controller = GetComponent<CharacterController>();
         stamina = maxStamina;
-        Cursor.lockState = CursorLockMode.Locked;
 
         if (staminaBar != null)
         {

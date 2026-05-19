@@ -24,11 +24,22 @@ public class GameManager : MonoBehaviour
         if (timeLeft <= 0) TriggerLose();
     }
 
+    public void UpdateTaskCount(int count)
+    {
+        tasksText.text = count + "/" + totalTasks;
+    }
+
     public void TaskCompleted()
     {
         completedTasks++;
-        tasksText.text = completedTasks + "/" + totalTasks;
-        if (completedTasks >= totalTasks) TriggerWin();
+        Debug.Log("TaskCompleted! completedTasks=" + completedTasks + " totalTasks=" + totalTasks);
+
+        if (completedTasks >= totalTasks)
+        {
+            completedTasks = 0;
+            tasksText.text = "0/" + totalTasks;
+            TaskManager.Instance.TaskGroupCompleted();
+        }
     }
 
     public void TriggerLose()

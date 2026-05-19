@@ -9,6 +9,13 @@ public class SceneFadeIn : MonoBehaviour
 
     void Start()
     {
+        // Ensure fade panel is active
+        fadeImage.gameObject.SetActive(true);
+
+        // Force black at scene start
+        Color color = fadeImage.color;
+        fadeImage.color = new Color(color.r, color.g, color.b, 1f);
+
         StartCoroutine(FadeIn());
     }
 
@@ -22,14 +29,17 @@ public class SceneFadeIn : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            float alpha = Mathf.Lerp(1f, 0f, timer / fadeDuration);
+            float alpha =
+                Mathf.Lerp(1f, 0f, timer / fadeDuration);
 
-            fadeImage.color = new Color(color.r, color.g, color.b, alpha);
+            fadeImage.color =
+                new Color(color.r, color.g, color.b, alpha);
 
             yield return null;
         }
 
-        fadeImage.color = new Color(color.r, color.g, color.b, 0f);
+        fadeImage.color =
+            new Color(color.r, color.g, color.b, 0f);
 
         fadeImage.gameObject.SetActive(false);
     }

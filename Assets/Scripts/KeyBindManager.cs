@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System;
+using UnityEngine.InputSystem;
 
 public class KeybindManager : MonoBehaviour
 {
@@ -37,11 +38,21 @@ public class KeybindManager : MonoBehaviour
     {
         if (onKeyChanged != null)
         {
-            foreach (KeyCode key in Enum.GetValues(typeof(KeyCode)))
+            foreach (Key key in Enum.GetValues(typeof(Key)))
             {
-                if (Input.GetKeyDown(key))
+                if (key == Key.None)
+                    continue;
+
+                if (Keyboard.current[key].wasPressedThisFrame)
                 {
-                    onKeyChanged.Invoke(key);
+                    KeyCode convertedKey =
+                        ConvertToKeyCode(key);
+
+                    if (convertedKey == KeyCode.None)
+                        continue;
+
+                    onKeyChanged.Invoke(convertedKey);
+
                     onKeyChanged = null;
 
                     SaveKeys();
@@ -124,5 +135,20 @@ public class KeybindManager : MonoBehaviour
 
         if (PlayerPrefs.HasKey("RunKey"))
             runKey = (KeyCode)Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("RunKey"));
+    }
+
+    KeyCode ConvertToKeyCode(Key key)
+    {
+        try
+        {
+            return (KeyCode)System.Enum.Parse(
+                typeof(KeyCode),
+                key.ToString(),
+                true);
+        }
+        catch
+        {
+            return KeyCode.None;
+        }
     }
 }

@@ -13,19 +13,9 @@ public class AudioManager : MonoBehaviour
 
     void Start()
     {
-        PlayerPrefs.DeleteAll();
-        if (!PlayerPrefs.HasKey("MasterVolume"))
-        {
-            masterSlider.value = 1f;
-            musicSlider.value = 1f;
-            sfxSlider.value = 1f;
-        }
-        else
-        {
-            masterSlider.value = PlayerPrefs.GetFloat("MasterVolume");
-            musicSlider.value = PlayerPrefs.GetFloat("MusicVolume");
-            sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume");
-        }
+        masterSlider.value = PlayerPrefs.GetFloat("MasterVolume", 1f);
+        musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", 1f);
+        sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume", 1f);
 
         SetMasterVolume(masterSlider.value);
         SetMusicVolume(musicSlider.value);
@@ -38,6 +28,8 @@ public class AudioManager : MonoBehaviour
             volume = 0.0001f;
 
         mixer.SetFloat("MasterVolume", Mathf.Log10(volume) * 20);
+
+        PlayerPrefs.SetFloat("MasterVolume", volume);
     }
 
     public void SetMusicVolume(float volume)
@@ -46,6 +38,8 @@ public class AudioManager : MonoBehaviour
             volume = 0.0001f;
 
         mixer.SetFloat("MusicVolume", Mathf.Log10(volume) * 20);
+
+        PlayerPrefs.SetFloat("MusicVolume", volume);
     }
 
     public void SetSFXVolume(float volume)
@@ -54,5 +48,7 @@ public class AudioManager : MonoBehaviour
             volume = 0.0001f;
 
         mixer.SetFloat("SFXVolume", Mathf.Log10(volume) * 20);
+
+        PlayerPrefs.SetFloat("SFXVolume", volume);
     }
 }

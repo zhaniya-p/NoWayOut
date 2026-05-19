@@ -7,6 +7,7 @@ public class Lever : MonoBehaviour
     private bool activated = false;
     public GameObject hintText;
     public Material activatedMaterial;
+    public AudioClip leverSound;
     public static int activatedCount = 0;
     public static int totalLevers = 3;
 
@@ -29,6 +30,9 @@ public class Lever : MonoBehaviour
     {
         activated = true;
         activatedCount++;
+
+        if (leverSound != null)
+            AudioSource.PlayClipAtPoint(leverSound, transform.position);
 
         if (activatedMaterial != null)
             GetComponent<Renderer>().material = activatedMaterial;

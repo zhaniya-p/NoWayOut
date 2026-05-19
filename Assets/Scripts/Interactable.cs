@@ -3,9 +3,19 @@ using UnityEngine.InputSystem;
 
 public class Interactable : MonoBehaviour
 {
+    public GameObject hintText;
+    public AudioClip pickupSound;
+
     private bool playerNearby = false;
     private bool done = false;
-    public GameObject hintText;
+    private AudioSource audioSource;
+    private static int collectedCount = 0;
+
+    void Start()
+    {
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+    }
 
     void Update()
     {
@@ -22,12 +32,14 @@ public class Interactable : MonoBehaviour
         }
     }
 
-    private static int collectedCount = 0;
-
     void CompleteTask()
     {
         done = true;
         collectedCount++;
+
+        if (pickupSound != null)
+            AudioSource.PlayClipAtPoint(pickupSound, transform.position);
+
         GameManager.Instance.UpdateTaskCount(collectedCount);
         GameManager.Instance.TaskCompleted();
 

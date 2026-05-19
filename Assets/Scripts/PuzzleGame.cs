@@ -4,6 +4,9 @@ using TMPro;
 
 public class PuzzleGame : MonoBehaviour
 {
+    public AudioClip buttonSound;
+    public AudioClip correctSound;
+    public AudioClip wrongSound;
     private bool playerNearby = false;
     private bool puzzleActive = false;
     private bool puzzleSolved = false;
@@ -65,6 +68,9 @@ public class PuzzleGame : MonoBehaviour
     {
         if (!puzzleActive || puzzleSolved) return;
 
+        if (buttonSound != null)
+            AudioSource.PlayClipAtPoint(buttonSound, transform.position);
+
         playerInput[inputIndex] = number;
         inputIndex++;
 
@@ -97,6 +103,8 @@ public class PuzzleGame : MonoBehaviour
 
         if (correct)
         {
+            if (correctSound != null)
+                AudioSource.PlayClipAtPoint(correctSound, transform.position);
             if (feedbackText != null)
                 feedbackText.text = "CORRECT! Door unlocking...";
             puzzleSolved = true;
@@ -105,6 +113,8 @@ public class PuzzleGame : MonoBehaviour
         }
         else
         {
+            if (wrongSound != null)
+                AudioSource.PlayClipAtPoint(wrongSound, transform.position);
             if (feedbackText != null)
                 feedbackText.text = "✗ Wrong sequence! Try again.";
             inputIndex = 0;

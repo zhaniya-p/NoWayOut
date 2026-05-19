@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    public AudioClip jumpSound;
+    private AudioSource playerAudio;
+
     [Header("Movement")]
     public float walkSpeed = 3f;
     public float runSpeed = 6f;
@@ -27,6 +30,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        playerAudio = GetComponent<AudioSource>();
         animator = GetComponent<Animator>();
         controller = GetComponent<CharacterController>();
         stamina = maxStamina;
@@ -71,6 +75,8 @@ public class PlayerController : MonoBehaviour
         {
             verticalVelocity = jumpForce;
             animator.SetTrigger("Jump");
+            if (jumpSound != null && playerAudio != null)
+                playerAudio.PlayOneShot(jumpSound);
         }
 
         verticalVelocity -= gravity * Time.deltaTime;

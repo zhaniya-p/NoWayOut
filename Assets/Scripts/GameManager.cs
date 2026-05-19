@@ -11,8 +11,11 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI tasksText;
     public GameObject gameOverCanvas;
     public GameObject winCanvas;
+    public TextMeshProUGUI winScoreText;
+    public TextMeshProUGUI loseScoreText;
     private int completedTasks = 0;
     private bool gameEnded = false;
+    private int score = 0;
 
     void Awake() { Instance = this; }
 
@@ -20,7 +23,7 @@ public class GameManager : MonoBehaviour
     {
         if (gameEnded) return;
         timeLeft -= Time.deltaTime;
-        timerText.text = Mathf.CeilToInt(timeLeft) + "s";
+        timerText.text = "Time: " + Mathf.CeilToInt(timeLeft) + "s";
         if (timeLeft <= 0) TriggerLose();
     }
 
@@ -32,7 +35,7 @@ public class GameManager : MonoBehaviour
     public void TaskCompleted()
     {
         completedTasks++;
-        Debug.Log("TaskCompleted! completedTasks=" + completedTasks + " totalTasks=" + totalTasks);
+        score += 100;
 
         if (completedTasks >= totalTasks)
         {
@@ -42,17 +45,68 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void CallTaskCompleted()
+    {
+        TaskCompleted();
+    }
+
     public void TriggerLose()
     {
+        if (gameEnded) return;
         gameEnded = true;
+
+        GameObject player = GameObject.FindWithTag("Player");
+        if (player != null)
+            player.GetComponent<PlayerController>()?.TriggerLoseAnimation();
+
+        int highScore = PlayerPrefs.GetInt("HighScore", 0);
+        if (score > highScore)
+            PlayerPrefs.SetInt("HighScore", score);
+
+        if (loseScoreText != null)
+            loseScoreText.text = "Score: " + score +
+                "\nHigh Score: " + PlayerPrefs.GetInt("HighScore", 0);
+
+        StartCoroutine(ShowLoseScreen());
+    }
+
+    System.Collections.IEnumerator ShowLoseScreen()
+    {
+        yield return new WaitForSeconds(2f);
         Time.timeScale = 0;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         gameOverCanvas.SetActive(true);
     }
 
     public void TriggerWin()
     {
+        if (gameEnded) return;
         gameEnded = true;
+
+        score += Mathf.CeilToInt(timeLeft) * 2;
+
+        GameObject player = GameObject.FindWithTag("Player");
+        if (player != null)
+            player.GetComponent<PlayerController>()?.TriggerWinAnimation();
+
+        int highScore = PlayerPrefs.GetInt("HighScore", 0);
+        if (score > highScore)
+            PlayerPrefs.SetInt("HighScore", score);
+
+        if (winScoreText != null)
+            winScoreText.text = "Score: " + score +
+                "\nHigh Score: " + PlayerPrefs.GetInt("HighScore", 0);
+
+        StartCoroutine(ShowWinScreen());
+    }
+
+    System.Collections.IEnumerator ShowWinScreen()
+    {
+        yield return new WaitForSeconds(2f);
         Time.timeScale = 0;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         winCanvas.SetActive(true);
     }
 

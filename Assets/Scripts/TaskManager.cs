@@ -81,7 +81,7 @@ public class TaskManager : MonoBehaviour
         }
         else
         {
-            GameManager.Instance.TriggerWin();
+            DoorController.Instance.OpenDoor();
         }
     }
 }

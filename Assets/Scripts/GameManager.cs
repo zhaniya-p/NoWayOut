@@ -17,6 +17,10 @@ public class GameManager : MonoBehaviour
     private bool gameEnded = false;
     private int score = 0;
 
+    [Header("Lose Audio")]
+    public AudioSource screamerSource;
+    public AudioClip screamerClip;
+
     void Awake() { Instance = this; }
 
     void Update()
@@ -72,10 +76,18 @@ public class GameManager : MonoBehaviour
 
     System.Collections.IEnumerator ShowLoseScreen()
     {
-        yield return new WaitForSeconds(2f);
+        if (screamerSource != null && screamerClip != null)
+        {
+            screamerSource.PlayOneShot(screamerClip);
+        }
+
+        yield return new WaitForSeconds(3f);
+
         Time.timeScale = 0;
+
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
         gameOverCanvas.SetActive(true);
     }
 

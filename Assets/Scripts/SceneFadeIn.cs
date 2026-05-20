@@ -1,46 +1,39 @@
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
 
 public class SceneFadeIn : MonoBehaviour
 {
-    public Image fadeImage;
+    public CanvasGroup fadeGroup;
+
     public float fadeDuration = 2f;
 
     void Start()
     {
-        // Ensure fade panel is active
-        fadeImage.gameObject.SetActive(true);
+        Time.timeScale = 1f;
 
-        // Force black at scene start
-        Color color = fadeImage.color;
-        fadeImage.color = new Color(color.r, color.g, color.b, 1f);
+        fadeGroup.gameObject.SetActive(true);
+
+        fadeGroup.alpha = 1f;
 
         StartCoroutine(FadeIn());
     }
 
     IEnumerator FadeIn()
     {
-        Color color = fadeImage.color;
-
         float timer = 0f;
 
         while (timer < fadeDuration)
         {
-            timer += Time.deltaTime;
+            timer += Time.unscaledDeltaTime;
 
-            float alpha =
+            fadeGroup.alpha =
                 Mathf.Lerp(1f, 0f, timer / fadeDuration);
-
-            fadeImage.color =
-                new Color(color.r, color.g, color.b, alpha);
 
             yield return null;
         }
 
-        fadeImage.color =
-            new Color(color.r, color.g, color.b, 0f);
+        fadeGroup.alpha = 0f;
 
-        fadeImage.gameObject.SetActive(false);
+        fadeGroup.gameObject.SetActive(false);
     }
 }

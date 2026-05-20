@@ -10,8 +10,29 @@ public class SkyboxSwitcher : MonoBehaviour
     [Header("Directional Light")]
     public Light directionalLight;
 
+    [Header("Night Settings")]
+    public Color nightLightColor = new Color(0.4f, 0.45f, 0.6f);
+    public float nightIntensity = 0.2f;
+
+    [Header("Rotation")]
+    public Vector3 nightRotation = new Vector3(340f, -30f, 0f);
+
     [Header("Transition")]
     public float transitionDelay = 1f;
+
+    private Color originalColor;
+    private float originalIntensity;
+    private Quaternion originalRotation;
+
+    void Start()
+    {
+        if (directionalLight != null)
+        {
+            originalColor = directionalLight.color;
+            originalIntensity = directionalLight.intensity;
+            originalRotation = directionalLight.transform.rotation;
+        }
+    }
 
     public void SwitchToNight()
     {
@@ -22,29 +43,37 @@ public class SkyboxSwitcher : MonoBehaviour
     {
         yield return new WaitForSeconds(transitionDelay);
 
-        // Switch skybox
+        // Change skybox
         RenderSettings.skybox = nightSkybox;
 
         DynamicGI.UpdateEnvironment();
 
-        // Disable directional light
+        // Modify directional light
         if (directionalLight != null)
         {
-            directionalLight.enabled = false;
+            directionalLight.color = nightLightColor;
+
+            directionalLight.intensity = nightIntensity;
+
+            directionalLight.transform.rotation =
+                Quaternion.Euler(nightRotation);
         }
     }
 
     public void SwitchToEvening()
     {
-        // Restore evening skybox
         RenderSettings.skybox = eveningSkybox;
 
         DynamicGI.UpdateEnvironment();
 
-        // Enable directional light
         if (directionalLight != null)
         {
-            directionalLight.enabled = true;
+            directionalLight.color = originalColor;
+
+            directionalLight.intensity = originalIntensity;
+
+            directionalLight.transform.rotation =
+                originalRotation;
         }
     }
 }

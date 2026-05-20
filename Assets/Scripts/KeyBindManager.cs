@@ -20,7 +20,7 @@ public class KeybindManager : MonoBehaviour
     public KeyCode backwardKey = KeyCode.S;
     public KeyCode leftKey = KeyCode.A;
     public KeyCode rightKey = KeyCode.D;
-    public KeyCode interactKey = KeyCode.F;
+    public KeyCode interactKey = KeyCode.E;
     public KeyCode runKey = KeyCode.LeftShift;
 
     private Action<KeyCode> onKeyChanged;
